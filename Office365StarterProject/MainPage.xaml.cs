@@ -5,6 +5,7 @@ using Office365StarterProject.Helpers;
 using Office365StarterProject.ViewModels;
 using Office365StarterProject.Views;
 using System;
+using System.Diagnostics;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -40,9 +41,18 @@ namespace Office365StarterProject
             this.DataContext = App.CurrentUser;
         }
 
-        private void Calendar_Button_Click(object sender, RoutedEventArgs e)
+        private async void Calendar_Button_Click(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(Calendar));
+             var _calendarCapability = ServiceCapabilities.Calendar.ToString();
+            var token = await AuthenticationHelper.GetTokenAsync(_calendarCapability);
+            var outlook = await AuthenticationHelper.GetOutlookClientAsync(_calendarCapability);
+            var tStart = DateTime.Today.ToUniversalTime();
+            var tEnd = DateTime.Today.AddHours(24).AddSeconds(-1).ToUniversalTime();
+
+            Debug.WriteLine($"Start: {tStart.ToString("u")}");
+            Debug.WriteLine($"End: {tEnd.ToString("u")}");
+
+            //this.Frame.Navigate(typeof(Calendar));
         }
 
         private void MyFiles_Button_Click(object sender, RoutedEventArgs e)
@@ -66,8 +76,8 @@ namespace Office365StarterProject
         /// NavigationHelper to respond to the page's navigation methods.
         /// 
         /// Page specific logic should be placed in event handlers for the  
-        /// <see cref="GridCS.Common.NavigationHelper.LoadState"/>
-        /// and <see cref="GridCS.Common.NavigationHelper.SaveState"/>.
+        /// <see cref="Common.NavigationHelper.LoadState"/>
+        /// and <see cref="Common.NavigationHelper.SaveState"/>.
         /// The navigation parameter is available in the LoadState method 
         /// in addition to page state preserved during an earlier session.
 

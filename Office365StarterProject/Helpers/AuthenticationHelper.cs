@@ -308,6 +308,12 @@ namespace Office365StarterProject
             }
         }
 
+        public static async Task<string> GetTokenAsync(string capability)
+        {
+            CapabilityDiscoveryResult result = await GetDiscoveryCapabilityResultAsync(capability);
+            return await GetTokenHelperAsync(_authenticationContext, result.ServiceResourceId);
+        }
+
         /// <summary>
         /// Signs the user out of the service.
         /// </summary>
